@@ -6,11 +6,16 @@ import {
   ResourceParser,
   URI,
 } from '@foam/core';
-import { renderReport, AttachmentReader, AttachmentLinkMode } from '../render-report';
+import {
+  renderReport,
+  AttachmentReader,
+  AttachmentLinkMode,
+} from '../render-report';
 import { commonPathBase } from '../slug';
 import { htmlPageAssetStrategy } from './asset-strategy';
 import { htmlPageLinkRewriter } from './link-rewriter';
 import { createHtmlPageLocator } from './locator';
+import { CalloutAliases } from '../../preview/callout';
 
 export interface HtmlPageTargetOptions {
   /** Title shown at the top of the report. */
@@ -29,6 +34,12 @@ export interface HtmlPageTargetOptions {
   readAttachment: AttachmentReader;
   /** How markdown links to attachments render. Defaults to `'ignore'`. */
   attachmentLinks?: AttachmentLinkMode;
+  /** Maps canonical callout types to their case-insensitive aliases. */
+  calloutAliases?: CalloutAliases;
+  /** Restricts callouts to GitHub's five supported alert types. */
+  githubOnly?: boolean;
+  /** Whether custom callout aliases are applied in extended mode. */
+  calloutAliasesEnabled?: boolean;
   /** Callback invoked once `emit` has produced the HTML string. */
   onEmit: (html: string) => Promise<void>;
 }
@@ -88,6 +99,9 @@ export class HtmlPageTarget implements PublishTarget {
       generatedAt: this.options.generatedAt,
       readAttachment: this.options.readAttachment,
       attachmentLinks: this.options.attachmentLinks,
+      calloutAliases: this.options.calloutAliases,
+      githubOnly: this.options.githubOnly,
+      calloutAliasesEnabled: this.options.calloutAliasesEnabled,
     });
 
     await this.options.onEmit(html);

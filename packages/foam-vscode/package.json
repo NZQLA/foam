@@ -489,6 +489,14 @@
         "title": "Foam: Copy To Clipboard Without Brackets"
       },
       {
+        "command": "foam-vscode.add-callout",
+        "title": "Foam: Add Callout to Selection"
+      },
+      {
+        "command": "foam-vscode.remove-callout",
+        "title": "Foam: Remove Callout from Selection"
+      },
+      {
         "command": "foam-vscode.create-note-from-template",
         "title": "Foam: Create New Note From Template"
       },
@@ -957,6 +965,77 @@
             "Include the section without title and style inline",
             "Include the section without title and style it within a container"
           ]
+        },
+        "foam.callout.githubOnly": {
+          "type": "boolean",
+          "default": true,
+          "description": "Only render the five GitHub-supported alert types (note, tip, important, warning, and caution), plus info as a Foam synonym for note. Other callout markers remain ordinary blockquotes."
+        },
+        "foam.callout.defaultType": {
+          "type": "string",
+          "default": "info",
+          "markdownDescription": "Callout type inserted by **Foam: Add Callout to Selection**. If this type is unavailable in the current mode (for example, an alias while aliases are disabled), the command falls back to `info`."
+        },
+        "foam.callout.aliases.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply callout aliases in extended mode. Alias settings stay visible when this is off because VS Code settings cannot conditionally hide them."
+        },
+        "foam.callout.aliases.builtin": {
+          "type": "object",
+          "default": {
+            "note": "info",
+            "tip": "hint",
+            "important": "must",
+            "warning": "!,warn,attention",
+            "caution": "!!!,danger"
+          },
+          "properties": {
+            "note": {
+              "type": "string",
+              "description": "Aliases for the built-in note callout, separated by commas."
+            },
+            "tip": {
+              "type": "string",
+              "description": "Aliases for the built-in tip callout, separated by commas."
+            },
+            "important": {
+              "type": "string",
+              "description": "Aliases for the built-in important callout, separated by commas."
+            },
+            "warning": {
+              "type": "string",
+              "description": "Aliases for the built-in warning callout, separated by commas."
+            },
+            "caution": {
+              "type": "string",
+              "description": "Aliases for the built-in caution callout, separated by commas."
+            }
+          },
+          "additionalProperties": false,
+          "markdownDescription": "Aliases for the fixed built-in GitHub callout types. Type names cannot be added, removed, or renamed. Enter aliases as comma-separated values."
+        },
+        "foam.callout.aliases.custom": {
+          "type": "object",
+          "default": {
+            "abstract": "summary,tldr",
+            "bug": "",
+            "doing": ">>",
+            "done": "success,√,V",
+            "error": "x,fail,failure",
+            "example": "",
+            "faq": "help,question,?",
+            "giveup": ">|",
+            "idea": "",
+            "missing": "",
+            "quote": "cite",
+            "todo": "",
+            "waitting": "=="
+          },
+          "additionalProperties": {
+            "type": "string"
+          },
+          "markdownDescription": "Optional custom callout types and their aliases, matched without regard to case or surrounding whitespace. Each object key is a callout type; enter any aliases as a comma-separated value, for example `done: success,√,V`. Presets can be deleted and new types added. The built-in GitHub types are configured separately and cannot be removed. Add CSS with `markdown.styles` to style custom types. Reload the VS Code window after changing this setting."
         },
         "foam.graph.titleMaxLength": {
           "type": "number",

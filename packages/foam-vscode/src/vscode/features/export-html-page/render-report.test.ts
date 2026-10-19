@@ -1,8 +1,5 @@
 import { FoamGraph, URI, createMarkdownParser } from '@foam/core';
-import {
-  createTestNote,
-  createTestWorkspace,
-} from '../../../test/test-utils';
+import { createTestNote, createTestWorkspace } from '../../../test/test-utils';
 import { renderReport } from './render-report';
 
 /**
@@ -54,10 +51,7 @@ function buildScenario() {
       ws.find('alpha')!.uri.toString(),
       '# Alpha\n\nThis links to [[beta]] and [[gamma]] and [[delta]].\n',
     ],
-    [
-      ws.find('beta')!.uri.toString(),
-      '# Beta\n\nBack to [[alpha]].\n',
-    ],
+    [ws.find('beta')!.uri.toString(), '# Beta\n\nBack to [[alpha]].\n'],
     [ws.find('gamma')!.uri.toString(), '# Gamma\n\nLeaf note.\n'],
   ]);
 
@@ -65,6 +59,124 @@ function buildScenario() {
 }
 
 describe('renderReport', () => {
+  it('renders callouts with styles in the standalone report', async () => {
+    const { ws, graph, parser, content } = buildScenario();
+    content.set(
+      ws.find('alpha')!.uri.toString(),
+      '> [!WARN]- More details\n> Callout text.\n'
+    );
+    const html = await renderReport({
+      workspace: ws,
+      graph,
+      parser,
+      noteUris: [ws.find('alpha')!.uri],
+      noteContent: content,
+      title: 'Test report',
+      generatedAt: new Date('2026-06-24T00:00:00Z'),
+      readAttachment: async () => null,
+      calloutAliases: { warning: ['warn'] },
+    });
+
+    expect(html).toContain(
+      '<details class="foam-callout callout" data-callout="WARN" data-callout-type="warning">'
+    );
+    expect(html).toContain('class="foam-callout-title"');
+    expect(html).toContain('class="foam-callout-content"');
+    expect(html).toContain('.report-note__body .foam-callout');
+    expect(html).toContain('data-callout-type="warning"');
+    expect(html).toContain('--callout-color: 250, 204, 21');
+    expect(html).toContain('mask-image: var(--callout-icon');
+    expect(html).toContain('Callout text.');
+  });
+
+  it('respects GitHub-only callouts in the standalone report', async () => {
+    const { ws, graph, parser, content } = buildScenario();
+    content.set(
+      ws.find('alpha')!.uri.toString(),
+      '> [!danger] Unsupported alert\n> Body text.\n'
+    );
+    const html = await renderReport({
+      workspace: ws,
+      graph,
+      parser,
+      noteUris: [ws.find('alpha')!.uri],
+      noteContent: content,
+      title: 'Test report',
+      generatedAt: new Date('2026-06-24T00:00:00Z'),
+      readAttachment: async () => null,
+      githubOnly: true,
+    });
+
+    expect(html).toContain('<blockquote>');
+    expect(html).not.toContain('data-callout="danger"');
+  });
+
+  it('includes workflow callout types and colors in the standalone report', async () => {
+    const { ws, graph, parser, content } = buildScenario();
+    content.set(
+      ws.find('alpha')!.uri.toString(),
+      [
+        '> [!idea]\n> Idea.\n',
+        '> [!todo]\n> Task.\n',
+        '> [!doing]\n> In progress.\n',
+        '> [!waitting]\n> Waiting.\n',
+        '> [!giveup]\n> Given up.\n',
+        '> [!done]\n> Complete.\n',
+      ].join('\n')
+    );
+    const html = await renderReport({
+      workspace: ws,
+      graph,
+      parser,
+      noteUris: [ws.find('alpha')!.uri],
+      noteContent: content,
+      title: 'Workflow callouts',
+      generatedAt: new Date('2026-06-24T00:00:00Z'),
+      readAttachment: async () => null,
+    });
+
+    for (const type of [
+      'idea',
+      'todo',
+      'doing',
+      'waitting',
+      'giveup',
+      'done',
+    ]) {
+      expect(html).toContain(`data-callout-type="${type}"`);
+    }
+    expect(html).toContain('--callout-color: 244, 114, 182');
+    expect(html).toContain('--callout-color: 96, 165, 250');
+    expect(html).toContain('--callout-color: 45, 212, 191');
+    expect(html).toContain('--callout-color: 251, 146, 60');
+    expect(html).toContain('--callout-color: 148, 163, 184');
+  });
+
+  it('styles warning and caution callouts with different severity colors', async () => {
+    const { ws, graph, parser, content } = buildScenario();
+    content.set(
+      ws.find('alpha')!.uri.toString(),
+      '> [!warning]\n> Warning.\n\n> [!caution]\n> Caution.\n'
+    );
+    const html = await renderReport({
+      workspace: ws,
+      graph,
+      parser,
+      noteUris: [ws.find('alpha')!.uri],
+      noteContent: content,
+      title: 'Alert styles',
+      generatedAt: new Date('2026-06-24T00:00:00Z'),
+      readAttachment: async () => null,
+    });
+
+    expect(html).toMatch(
+      /\.report-note__body \.foam-callout\[data-callout-type="warning"\],\s*\.report-note__body \.foam-callout\[data-callout-type="attention"\]\s*\{\s*--callout-color: 250, 204, 21;/
+    );
+    expect(html).toMatch(
+      /\.report-note__body \.foam-callout\[data-callout-type="caution"\]\s*\{\s*--callout-color: 248, 113, 113;/
+    );
+  });
+
   it('renders a table of contents listing every included note', async () => {
     const { ws, graph, parser, content } = buildScenario();
     const html = await renderReport({
@@ -228,9 +340,7 @@ describe('renderReport', () => {
     // markdown, so a hand-rolled `createTestNote` (no links) wouldn't trigger
     // inlining even though it would in production.
     ws.set(parser.parse(noteUri, content));
-    ws.set(
-      createTestNote({ uri: '/logo.png', type: 'image' })
-    );
+    ws.set(createTestNote({ uri: '/logo.png', type: 'image' }));
     const graph = FoamGraph.fromWorkspace(ws);
     const html = await renderReport({
       workspace: ws,
@@ -275,10 +385,13 @@ describe('renderReport', () => {
     // embedded note's own section (rendered through the OUTER md, which
     // always had the inliner), and once inside the EMBED that wikilink-embed
     // expands in the host's section (rendered through an INNER md spawned
-    const dataUriOccurrences = html.split('src="data:image/png;base64,').length - 1;
+    const dataUriOccurrences =
+      html.split('src="data:image/png;base64,').length - 1;
     expect(dataUriOccurrences).toBeGreaterThanOrEqual(2);
     // And the raw filename must not survive anywhere in the live document
-    const articleMatch = html.match(/<article class="report">[\s\S]*?<\/article>/);
+    const articleMatch = html.match(
+      /<article class="report">[\s\S]*?<\/article>/
+    );
     expect(articleMatch).not.toBeNull();
     expect(articleMatch![0]).not.toContain('src="logo.png"');
   });
@@ -828,9 +941,7 @@ describe('renderReport', () => {
     // Stylesheet drives table styling off the report-owned wrapper, not the
     // foam-query-results class string — the dedicated table selector is
     // present so we know the table will get styled.
-    expect(html).toContain(
-      '.report-note__body .report-query-result > table'
-    );
+    expect(html).toContain('.report-note__body .report-query-result > table');
   });
 
   it('wraps standard markdown tables in a scroll container so they can take full width', async () => {
@@ -981,7 +1092,9 @@ describe('renderReport', () => {
     // No raw collision: the un-scoped id="x" must not appear anywhere in the
     // live document (we leave the preview templates alone but assert on the
     // main article body).
-    const articleMatch = html.match(/<article class="report">[\s\S]*?<\/article>/);
+    const articleMatch = html.match(
+      /<article class="report">[\s\S]*?<\/article>/
+    );
     expect(articleMatch).not.toBeNull();
     expect(articleMatch![0]).not.toMatch(/\sid="x"/);
   });
@@ -1054,5 +1167,4 @@ describe('renderReport', () => {
       expect(html).not.toContain('img-src');
     });
   });
-
 });

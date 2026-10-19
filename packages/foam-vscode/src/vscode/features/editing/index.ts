@@ -7,6 +7,7 @@ import updateWikilinksCommand from './update-wikilinks';
 import copyWithoutBracketsCommand from './copy-without-brackets';
 import headingRenameProvider from './heading-rename-provider';
 import blockRenameProvider from './block-rename-provider';
+import calloutCommands from './callout-commands';
 
 export default async function activate(
   context: ExtensionContext,
@@ -17,6 +18,7 @@ export default async function activate(
   await convertLinks(context, foamPromise);
   await updateWikilinksCommand(context, foamPromise);
   await copyWithoutBracketsCommand(context);
+  calloutCommands(context);
   await headingRenameProvider(context, foamPromise);
   await blockRenameProvider(context, foamPromise);
 }

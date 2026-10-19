@@ -20,6 +20,7 @@ import { default as markdownItWikilinkEmbed } from './wikilink-embed';
 import { default as escapeWikilinkPipes } from './escape-wikilink-pipes';
 import { default as markdownItBlockAnchorIds } from './block-anchor-ids';
 import { default as markdownItFoamQuery } from './foam-query-renderer';
+import { CalloutAliases, markdownItCallout } from './callout';
 import { LinkResolver } from './wikilink-navigation';
 
 /**
@@ -47,6 +48,12 @@ export interface FoamMarkdownItOptions {
   isVirtualWorkspace?: () => boolean;
   /** Whether to render `[^id]` footnotes. Defaults to true. */
   footnotes?: boolean;
+  /** Maps canonical callout types to their case-insensitive aliases. */
+  calloutAliases?: CalloutAliases;
+  /** Restricts callouts to GitHub's five supported alert types. */
+  githubOnly?: boolean;
+  /** Whether custom callout aliases are applied in extended mode. */
+  calloutAliasesEnabled?: boolean;
   /** Default embed note type, e.g. `full-card`. */
   getEmbedNoteType?: () => string;
   /** Initial markdown-it options for fresh inner instances. */
@@ -91,6 +98,9 @@ export function createFoamMarkdownIt(
     isVirtualWorkspace,
     getEmbedNoteType,
     footnotes = true,
+    calloutAliases,
+    githubOnly = false,
+    calloutAliasesEnabled = true,
     innerMdOptions = { html: true },
     renderContext = createRenderContext(),
     onDidRender,
@@ -127,6 +137,12 @@ export function createFoamMarkdownIt(
   r = markdownItWikilinkNavigation(r, workspace, { linkResolver });
   r = markdownItRemoveLinkReferences(r, workspace);
   r = markdownItBlockAnchorIds(r);
+  markdownItCallout(
+    r,
+    calloutAliases,
+    githubOnly,
+    calloutAliasesEnabled
+  );
   r = markdownItFoamQuery(r, workspace, graph, {
     isTrusted,
     toHref,

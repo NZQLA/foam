@@ -28,7 +28,7 @@ function getUnitReadySpecFiles(): string[] {
         content.includes('// @unit-ready')
       );
     })
-    .map(file => `src/${file}`);
+    .map(file => `src/${file.split(path.sep).join('/')}`);
 }
 
 const excludeSpecs = process.env.EXCLUDE_SPECS === 'true';
