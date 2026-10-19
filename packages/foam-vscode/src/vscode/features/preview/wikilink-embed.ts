@@ -1,5 +1,6 @@
 /*global markdownit:readonly*/
 
+
 // eslint-disable-next-line no-restricted-imports
 import { readFileSync } from 'fs';
 import markdownItRegex from 'markdown-it-regex';
@@ -22,6 +23,9 @@ export const WIKILINK_EMBED_REGEX =
 export const WIKILINK_EMBED_REGEX_GROUPS =
   /((?:\w+)|(?:(?:\w+)-(?:\w+)))?!\[\[([^|[\]]+?)(\|[^[\]]+?)?\]\]/;
 export const CONFIG_EMBED_NOTE_TYPE = 'preview.embedNoteType';
+const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.avi', '.mov'];
+const AUDIO_EXTENSIONS = ['.mp3', '.wav', '.m4a'];
+const MEDIA_EXTENSIONS = [...VIDEO_EXTENSIONS, ...AUDIO_EXTENSIONS];
 
 /**
  * Options for the wikilink embed plugin. Pass the same `renderContext` into
@@ -89,6 +93,19 @@ export const markdownItWikilinkEmbed = (
         }
 
         let includedNote = workspace.find(wikilink);
+        if (!includedNote) {
+          const [targetPath, fragment] = wikilink.split('#');
+          if (!/(?:^|\/)[^/]+\.[^/]+$/.test(targetPath)) {
+            for (const extension of MEDIA_EXTENSIONS) {
+              includedNote = workspace.find(
+                `${targetPath}${extension}${fragment ? `#${fragment}` : ''}`
+              );
+              if (includedNote) {
+                break;
+              }
+            }
+          }
+        }
 
         if (!includedNote && wikilink.startsWith('#')) {
           const currentResource = resolveCurrentNote();
@@ -139,7 +156,8 @@ export const markdownItWikilinkEmbed = (
             workspace,
             md,
             getEmbedNoteType,
-            parametersString
+            parametersString,
+            resolveCurrentNote()
           );
         } catch (e) {
           Logger.error(
@@ -186,7 +204,8 @@ function getNoteContent(
   workspace: FoamWorkspace,
   md: markdownit,
   getEmbedNoteType: () => string,
-  parametersString?: string
+  parametersString?: string,
+  currentResource: Resource | null = null
 ): string {
   let content = `Embed for [[${includedNote.uri.path}]]`;
   let toRender: string;
@@ -215,6 +234,34 @@ function getNoteContent(
       break;
     }
     case 'attachment':
+      if (
+        VIDEO_EXTENSIONS.includes(
+          includedNote.uri.getExtension().toLocaleLowerCase()
+        )
+      ) {
+        const videoUri = currentResource
+          ? includedNote.uri.relativeTo(currentResource.uri.getDirectory())
+          : includedNote.uri;
+        content = `<video src="${escapeHtml(
+          md.normalizeLink(videoUri.path)
+        )}" controls></video>`;
+        toRender = content;
+        break;
+      }
+      if (
+        AUDIO_EXTENSIONS.includes(
+          includedNote.uri.getExtension().toLocaleLowerCase()
+        )
+      ) {
+        const audioUri = currentResource
+          ? includedNote.uri.relativeTo(currentResource.uri.getDirectory())
+          : includedNote.uri;
+        content = `<audio src="${escapeHtml(
+          md.normalizeLink(audioUri.path)
+        )}" controls></audio>`;
+        toRender = content;
+        break;
+      }
       content = `
 <div class="embed-container-attachment">
 ${md.renderInline('[[' + includedNote.uri.path + ']]')}<br/>

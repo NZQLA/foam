@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.46.1
+
+### Patch Changes
+
+- Embed local audio and video files in the Markdown Preview with `![[filename]]`, including wikilinks without file extensions.
+
 ## 0.46.0
 
 ### Minor Changes

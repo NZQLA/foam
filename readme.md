@@ -1,3 +1,44 @@
+<!--
+This repository is an unofficial community fork of Foam.
+The upstream README is preserved below.
+-->
+
+# Foam - Unofficial Community Fork
+
+Read this README in Chinese: [Simplified Chinese](readme_cn.md).
+
+> **Unofficial fork:** This repository builds on [Foam](https://github.com/foambubble/foam), the open-source knowledge-management extension for VS Code. It is maintained independently and is not an official Foam release.
+
+## With gratitude to the original Foam team
+
+To Jani Eväkallio, the original creator, and to every maintainer and contributor who has shaped Foam: thank you. Your thoughtful work on the code, documentation, and community created the foundation this fork is built on. This fork is an independent continuation for additional ideas; it does not diminish or replace the original project. The original project description and contributor credits are preserved below.
+
+## Added in this fork: Embedding audio and video with wikilink like obisidian
+
+Embed local audio and video files in Foam's Markdown Preview with the familiar wiki embed syntax. You do not need to write an HTML `<audio>` or `<video>` tag:
+
+- with file extension
+```markdown
+![[meeting-recording.mp4]]
+![[field-recording.mp3]]
+```
+- without file extension
+```markdown
+![[meeting-recording]]
+![[field-recording]]
+```
+
+### !!! Video and Audio Formats
+Video formats: `.mp4`, `.webm`, `.avi`, `.mov`. Audio formats: `.mp3`, `.wav`, `.m4a`.
+
+[VSCode don't support all video and audio formats natively. ](https://github.com/microsoft/vscode/issues/167685)
+
+Make sure your media files are in a format that VSCode can play.
+
+---
+
+**The original Foam README begins below and is preserved from upstream.**
+
 <div align="center">
 
 <img src="packages/foam-vscode/assets/icon/FOAM_ICON_256.png" width="100"/>
