@@ -9,6 +9,18 @@ import { getFoamVsCodeConfig } from '../../config';
 import { isVirtualWorkspace } from '../../services/editor';
 import { CONFIG_EMBED_NOTE_TYPE } from './wikilink-embed';
 import { CONFIG_FOOTNOTES_ENABLE } from '../navigation/navigation-provider';
+import {
+  BuiltinCalloutAliases,
+  CalloutAliases,
+  CONFIG_CALLOUT_ALIASES,
+  CONFIG_CALLOUT_ALIASES_ENABLED,
+  CONFIG_CALLOUT_BUILTIN_ALIASES,
+  CONFIG_CALLOUT_GITHUB_ONLY,
+  DEFAULT_BUILTIN_CALLOUT_ALIASES,
+  DEFAULT_CUSTOM_CALLOUT_ALIASES,
+  combineCalloutAliases,
+  readBuiltinCalloutAliases,
+} from './callout';
 
 export default async function activate(
   context: vscode.ExtensionContext,
@@ -77,6 +89,26 @@ export default async function activate(
           footnotes: getFoamVsCodeConfig<boolean>(
             CONFIG_FOOTNOTES_ENABLE,
             true
+          ),
+          calloutAliases: combineCalloutAliases(
+            readBuiltinCalloutAliases(
+              getFoamVsCodeConfig<BuiltinCalloutAliases>(
+                CONFIG_CALLOUT_BUILTIN_ALIASES,
+                DEFAULT_BUILTIN_CALLOUT_ALIASES
+              )
+            ),
+            getFoamVsCodeConfig<CalloutAliases>(
+              CONFIG_CALLOUT_ALIASES,
+              DEFAULT_CUSTOM_CALLOUT_ALIASES
+            )
+          ),
+          githubOnly: getFoamVsCodeConfig<boolean>(
+            CONFIG_CALLOUT_GITHUB_ONLY,
+            true
+          ),
+          calloutAliasesEnabled: getFoamVsCodeConfig<boolean>(
+            CONFIG_CALLOUT_ALIASES_ENABLED,
+            false
           ),
           renderContext,
           // VS Code applies its math plugin to the preview's own instance only,

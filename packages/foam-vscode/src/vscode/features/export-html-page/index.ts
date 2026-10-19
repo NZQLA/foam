@@ -6,6 +6,19 @@ import { getTelemetry } from '../../services/telemetry';
 import { collectNoteSet } from './note-set';
 import { slugForUri } from './slug';
 import { HtmlPageTarget } from './target/target';
+import { getFoamVsCodeConfig } from '../../config';
+import {
+  BuiltinCalloutAliases,
+  CalloutAliases,
+  CONFIG_CALLOUT_ALIASES,
+  CONFIG_CALLOUT_ALIASES_ENABLED,
+  CONFIG_CALLOUT_BUILTIN_ALIASES,
+  CONFIG_CALLOUT_GITHUB_ONLY,
+  DEFAULT_BUILTIN_CALLOUT_ALIASES,
+  DEFAULT_CUSTOM_CALLOUT_ALIASES,
+  combineCalloutAliases,
+  readBuiltinCalloutAliases,
+} from '../preview/callout';
 
 export const EXPORT_HTML_PAGE_COMMAND = 'foam-vscode.export-html-page';
 const DEFAULT_DEPTH = 2;
@@ -38,7 +51,12 @@ async function runExportHtmlPage(foam: Foam): Promise<void> {
   const depth = await pickDepth();
   if (depth === undefined) return;
 
-  const candidates = collectNoteSet(foam.workspace, foam.graph, entryPoint, depth);
+  const candidates = collectNoteSet(
+    foam.workspace,
+    foam.graph,
+    entryPoint,
+    depth
+  );
   if (candidates.length === 0) {
     vscode.window.showWarningMessage(
       'Foam: no notes found from this entry point.'
@@ -80,6 +98,26 @@ async function runExportHtmlPage(foam: Foam): Promise<void> {
         graph: foam.graph,
         parser: foam.services.parser,
         noteUris: selected,
+        calloutAliases: combineCalloutAliases(
+          readBuiltinCalloutAliases(
+            getFoamVsCodeConfig<BuiltinCalloutAliases>(
+              CONFIG_CALLOUT_BUILTIN_ALIASES,
+              DEFAULT_BUILTIN_CALLOUT_ALIASES
+            )
+          ),
+          getFoamVsCodeConfig<CalloutAliases>(
+            CONFIG_CALLOUT_ALIASES,
+            DEFAULT_CUSTOM_CALLOUT_ALIASES
+          )
+        ),
+        githubOnly: getFoamVsCodeConfig<boolean>(
+          CONFIG_CALLOUT_GITHUB_ONLY,
+          true
+        ),
+        calloutAliasesEnabled: getFoamVsCodeConfig<boolean>(
+          CONFIG_CALLOUT_ALIASES_ENABLED,
+          false
+        ),
         readAttachment: async (uri: URI) => {
           try {
             return await fs.readFile(uri.toFsPath());
@@ -128,9 +166,7 @@ async function pickEntryPoint(foam: Foam): Promise<URI | undefined> {
   if (fromEditor && fromEditor.type === 'note') {
     choices.push({
       label: `$(file) Use current note: ${fromEditor.title}`,
-      description: vscode.workspace.asRelativePath(
-        toVsCodeUri(fromEditor.uri)
-      ),
+      description: vscode.workspace.asRelativePath(toVsCodeUri(fromEditor.uri)),
     });
   }
   choices.push({ label: '$(search) Pick a note from the workspace…' });
@@ -206,7 +242,8 @@ async function pickIncludedNotes(
 async function pickTitle(defaultValue: string): Promise<string | undefined> {
   const input = await vscode.window.showInputBox({
     title: 'Foam: Export to HTML page — title',
-    prompt: 'Title shown at the top of the report (and used for the default filename)',
+    prompt:
+      'Title shown at the top of the report (and used for the default filename)',
     value: defaultValue,
     validateInput: value =>
       value.trim().length === 0 ? 'Title cannot be empty' : null,
@@ -215,9 +252,7 @@ async function pickTitle(defaultValue: string): Promise<string | undefined> {
   return input.trim();
 }
 
-async function pickSaveLocation(
-  defaultName: string
-): Promise<URI | undefined> {
+async function pickSaveLocation(defaultName: string): Promise<URI | undefined> {
   const root = vscode.workspace.workspaceFolders?.[0]?.uri;
   const defaultUri = root
     ? vscode.Uri.joinPath(root, defaultName)
@@ -229,4 +264,3 @@ async function pickSaveLocation(
   });
   return result ? fromVsCodeUri(result) : undefined;
 }
-

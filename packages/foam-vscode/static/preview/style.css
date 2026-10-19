@@ -98,6 +98,159 @@
   margin: 0.5em 0;
 }
 
+.foam-callout {
+  --callout-color: 59, 130, 246;
+  --foam-callout-color: rgb(var(--callout-color));
+  background-color: var(--vscode-textBlockQuote-background);
+  background-color: color-mix(
+    in srgb,
+    var(--foam-callout-color) 8%,
+    var(--vscode-textBlockQuote-background)
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--foam-callout-color) 28%, transparent);
+  border-left: 3px solid var(--foam-callout-color);
+  border-radius: 0 6px 6px 0;
+  margin: 1em 0;
+  padding: 0.75em 1em;
+}
+
+.foam-callout[data-callout-type='important'] {
+  --callout-color: 168, 85, 247;
+}
+
+.foam-callout[data-callout-type='danger'],
+.foam-callout[data-callout-type='failure'],
+.foam-callout[data-callout-type='error'],
+.foam-callout[data-callout-type='fail'] {
+  --callout-color: 248, 113, 113;
+}
+
+.foam-callout[data-callout-type='warning'],
+.foam-callout[data-callout-type='attention'] {
+  --callout-color: 250, 204, 21;
+}
+
+.foam-callout[data-callout-type='caution'] {
+  --callout-color: 248, 113, 113;
+}
+
+.foam-callout[data-callout-type='success'],
+.foam-callout[data-callout-type='done'] {
+  --callout-color: 74, 222, 128;
+}
+
+.foam-callout[data-callout-type='idea'] {
+  --callout-color: 244, 114, 182;
+}
+
+.foam-callout[data-callout-type='todo'] {
+  --callout-color: 96, 165, 250;
+}
+
+.foam-callout[data-callout-type='doing'] {
+  --callout-color: 45, 212, 191;
+}
+
+.foam-callout[data-callout-type='waitting'] {
+  --callout-color: 251, 146, 60;
+}
+
+.foam-callout[data-callout-type='giveup'] {
+  --callout-color: 148, 163, 184;
+}
+
+.foam-callout[data-callout-type='tip'],
+.foam-callout[data-callout-type='hint'] {
+  --callout-color: 45, 212, 191;
+}
+
+.foam-callout[data-callout-type='question'],
+.foam-callout[data-callout-type='faq'],
+.foam-callout[data-callout-type='help'] {
+  --callout-color: 251, 146, 60;
+}
+
+.foam-callout[data-callout-type='bug'] {
+  --callout-color: 239, 68, 68;
+}
+
+.foam-callout[data-callout-type='missing'] {
+  --callout-color: 249, 115, 22;
+}
+
+.foam-callout[data-callout-type='quote'],
+.foam-callout[data-callout-type='cite'] {
+  --callout-color: 148, 163, 184;
+}
+
+.foam-callout-title {
+  align-items: center;
+  color: var(--foam-callout-color);
+  display: flex;
+  font-size: 1.35em;
+  font-weight: 700;
+  gap: 0.5em;
+  line-height: 1.35;
+  margin: 0 0 0.6em;
+}
+
+.foam-callout-icon {
+  background-color: currentColor;
+  flex: 0 0 1.1em;
+  height: 1.1em;
+  mask-image: var(--callout-icon, var(--foam-callout-default-icon));
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: var(--callout-icon, var(--foam-callout-default-icon));
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  width: 1.1em;
+}
+
+.foam-callout-content > :first-child {
+  margin-top: 0;
+}
+
+.foam-callout-content > :last-child {
+  margin-bottom: 0;
+}
+
+details.foam-callout {
+  padding-bottom: 0.75em;
+}
+
+details.foam-callout > .foam-callout-title {
+  cursor: pointer;
+  list-style: none;
+  margin: -0.75em -1em 0;
+  padding: 0.75em 1em;
+}
+
+details.foam-callout > .foam-callout-title::-webkit-details-marker {
+  display: none;
+}
+
+.foam-callout-chevron {
+  border-bottom: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  height: 0.45em;
+  margin-left: auto;
+  transform: rotate(45deg) translateY(-0.1em);
+  transition: transform 120ms ease;
+  width: 0.45em;
+}
+
+details.foam-callout[open] > .foam-callout-title .foam-callout-chevron {
+  transform: rotate(225deg) translateY(-0.1em);
+}
+
+details.foam-callout:not([open]) > .foam-callout-content {
+  display: none;
+}
+
 .embed-container-image {
   margin: auto;
   padding: 0.25em;

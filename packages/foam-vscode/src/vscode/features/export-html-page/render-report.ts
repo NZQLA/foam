@@ -12,6 +12,7 @@ import {
   toSlug,
 } from '@foam/core';
 import { createFoamMarkdownIt } from '../preview/foam-markdown-it';
+import { CalloutAliases } from '../preview/callout';
 import { createHtmlPageLinkResolver } from '../preview/link-resolvers';
 import { collectInReportBacklinks } from './backlinks';
 import { commonPathBase, slugForUri } from './slug';
@@ -61,6 +62,12 @@ export interface RenderReportOptions {
   /** How to render markdown links to attachments. Defaults to `'ignore'`
    * so the report stays portable as a standalone artifact. */
   attachmentLinks?: AttachmentLinkMode;
+  /** Maps canonical callout types to their case-insensitive aliases. */
+  calloutAliases?: CalloutAliases;
+  /** Restricts callouts to GitHub's five supported alert types. */
+  githubOnly?: boolean;
+  /** Whether custom callout aliases are applied in extended mode. */
+  calloutAliasesEnabled?: boolean;
 }
 
 interface RenderedNote {
@@ -75,7 +82,9 @@ interface RenderedNote {
  * Renders the report as a single self-contained HTML string. Caller writes
  * it to disk and (optionally) opens it.
  */
-export async function renderReport(options: RenderReportOptions): Promise<string> {
+export async function renderReport(
+  options: RenderReportOptions
+): Promise<string> {
   const {
     workspace,
     graph,
@@ -86,6 +95,9 @@ export async function renderReport(options: RenderReportOptions): Promise<string
     generatedAt,
     readAttachment,
     attachmentLinks = 'ignore',
+    calloutAliases,
+    githubOnly = false,
+    calloutAliasesEnabled = true,
   } = options;
 
   // Slugs are computed relative to the deepest directory shared by every
@@ -103,8 +115,7 @@ export async function renderReport(options: RenderReportOptions): Promise<string
   // notes (link-anchors plugin, foam-query's `toHref`).
   const slugFor = (uri: URI) =>
     includedSlugs.get(uri.toString()) ?? slugForUri(uri, slugBase);
-  const reportSlug = (uri: URI) =>
-    includedSlugs.get(uri.toString()) ?? null;
+  const reportSlug = (uri: URI) => includedSlugs.get(uri.toString()) ?? null;
 
   const linkResolver = createHtmlPageLinkResolver(noteUris, slugFor);
 
@@ -125,7 +136,8 @@ export async function renderReport(options: RenderReportOptions): Promise<string
   // section-anchor plugin reads the slug off the same pointer.
   let currentResource: Resource | null = null;
   const getCurrentResource = () => currentResource;
-  const getCurrentNoteSlug = () => (currentResource ? slugFor(currentResource.uri) : null);
+  const getCurrentNoteSlug = () =>
+    currentResource ? slugFor(currentResource.uri) : null;
 
   const getCurrentNoteUri = () => currentResource?.uri ?? null;
 
@@ -148,6 +160,9 @@ export async function renderReport(options: RenderReportOptions): Promise<string
     },
     isVirtualWorkspace: () => false,
     getEmbedNoteType: () => 'full-card',
+    calloutAliases,
+    githubOnly,
+    calloutAliasesEnabled,
     renderContext,
     innerMdOptions: { html: true },
     // Wrap so the report owns the chrome — see `.report-query-result` styles.
@@ -217,7 +232,10 @@ async function inlineAttachments(args: InlineAttachmentsArgs): Promise<void> {
   // Phase 1: collect every attachment ref across every included note, grouped
   // by attachment URI. We need every raw-target string each URI was referenced
   // with so the inline-src lookup hits at render time.
-  const rawTargetsByUri = new Map<string, { uri: URI; rawTargets: Set<string> }>();
+  const rawTargetsByUri = new Map<
+    string,
+    { uri: URI; rawTargets: Set<string> }
+  >();
   for (const noteUri of noteUris) {
     const resource = workspace.find(noteUri);
     if (!resource) continue;
@@ -342,7 +360,10 @@ function mimeForExtension(path: string): string {
   }
 }
 
-function installImageInliner(md: markdownit, inlinedSrc: Map<string, string>): void {
+function installImageInliner(
+  md: markdownit,
+  inlinedSrc: Map<string, string>
+): void {
   const original = md.normalizeLink;
   md.normalizeLink = (url: string) => {
     const normalized = original.call(md, url);
@@ -388,7 +409,12 @@ function renderSection(
   graph: FoamGraph,
   includedUris: URI[]
 ): string {
-  const backlinks = collectInReportBacklinks(workspace, graph, note.uri, includedUris);
+  const backlinks = collectInReportBacklinks(
+    workspace,
+    graph,
+    note.uri,
+    includedUris
+  );
   const backlinksHtml =
     backlinks.length === 0
       ? ''
@@ -399,7 +425,8 @@ ${backlinks
   .map(
     bl =>
       `      <li><a href="#note-${escapeAttr(
-        allNotes.find(n => n.uri.toString() === bl.sourceUri.toString())?.slug ?? ''
+        allNotes.find(n => n.uri.toString() === bl.sourceUri.toString())
+          ?.slug ?? ''
       )}">${escapeText(bl.sourceTitle)}</a></li>`
   )
   .join('\n')}
@@ -425,7 +452,9 @@ function renderPreviewTemplates(notes: RenderedNote[]): string {
           note.slug
         )}"><div class="report-preview__title">${escapeText(
           note.resource.title
-        )}</div><div class="report-preview__body">${note.previewHtml}</div></template>`
+        )}</div><div class="report-preview__body">${
+          note.previewHtml
+        }</div></template>`
     )
     .join('\n');
 }
@@ -472,7 +501,8 @@ function createNonce(): string {
 }
 
 function wrapDocument(args: WrapDocumentArgs): string {
-  const { title, generatedAt, noteCount, tocHtml, sectionsHtml, previewsHtml } = args;
+  const { title, generatedAt, noteCount, tocHtml, sectionsHtml, previewsHtml } =
+    args;
   const nonce = createNonce();
   const timestamp = generatedAt.toISOString();
   const humanDate = generatedAt.toISOString().slice(0, 10);
@@ -493,7 +523,9 @@ function wrapDocument(args: WrapDocumentArgs): string {
 <nav id="report-breadcrumb" class="report-breadcrumb" aria-label="Current location">
   <div class="report-breadcrumb__inner">
     <ol class="report-breadcrumb__crumbs">
-      <li class="report-breadcrumb__title"><a href="#top">${escapeText(title)}</a></li>
+      <li class="report-breadcrumb__title"><a href="#top">${escapeText(
+        title
+      )}</a></li>
       <li class="report-breadcrumb__note" data-breadcrumb-slot="note" hidden></li>
       <li class="report-breadcrumb__section" data-breadcrumb-slot="section" hidden></li>
     </ol>
@@ -521,9 +553,9 @@ function wrapDocument(args: WrapDocumentArgs): string {
 <article class="report">
 <header class="report-header">
 <h1>${escapeText(title)}</h1>
-<p class="report-meta">Generated ${escapeText(humanDate)} from ${noteCount} note${
-    noteCount === 1 ? '' : 's'
-  }</p>
+<p class="report-meta">Generated ${escapeText(
+    humanDate
+  )} from ${noteCount} note${noteCount === 1 ? '' : 's'}</p>
 </header>
 ${tocHtml}
 <main class="report-body">
@@ -886,6 +918,122 @@ html[data-theme="dark"] .report-theme-toggle__moon { display: block; }
   font-style: italic;
 }
 .report-note__body blockquote p:last-child { margin-bottom: 0; }
+
+/* Callouts */
+.report-note__body .foam-callout {
+  --callout-color: 59, 130, 246;
+  --foam-callout-color: rgb(var(--callout-color));
+  background: color-mix(in srgb, var(--foam-callout-color) 8%, var(--report-surface-2));
+  border-left: 3px solid var(--foam-callout-color);
+  border-radius: 0 6px 6px 0;
+  color: var(--report-text);
+  font-style: normal;
+  margin: 1.25rem 0;
+  padding: 0.75rem 1rem;
+}
+.report-note__body .foam-callout[data-callout-type="important"] {
+  --callout-color: 168, 85, 247;
+}
+.report-note__body .foam-callout[data-callout-type="warning"],
+.report-note__body .foam-callout[data-callout-type="attention"] {
+  --callout-color: 250, 204, 21;
+}
+.report-note__body .foam-callout[data-callout-type="caution"] {
+  --callout-color: 248, 113, 113;
+}
+.report-note__body .foam-callout[data-callout-type="danger"],
+.report-note__body .foam-callout[data-callout-type="failure"],
+.report-note__body .foam-callout[data-callout-type="error"],
+.report-note__body .foam-callout[data-callout-type="fail"] {
+  --callout-color: 248, 113, 113;
+}
+.report-note__body .foam-callout[data-callout-type="success"],
+.report-note__body .foam-callout[data-callout-type="done"] {
+  --callout-color: 74, 222, 128;
+}
+.report-note__body .foam-callout[data-callout-type="idea"] {
+  --callout-color: 244, 114, 182;
+}
+.report-note__body .foam-callout[data-callout-type="todo"] {
+  --callout-color: 96, 165, 250;
+}
+.report-note__body .foam-callout[data-callout-type="doing"] {
+  --callout-color: 45, 212, 191;
+}
+.report-note__body .foam-callout[data-callout-type="waitting"] {
+  --callout-color: 251, 146, 60;
+}
+.report-note__body .foam-callout[data-callout-type="giveup"] {
+  --callout-color: 148, 163, 184;
+}
+.report-note__body .foam-callout[data-callout-type="tip"],
+.report-note__body .foam-callout[data-callout-type="hint"] {
+  --callout-color: 45, 212, 191;
+}
+.report-note__body .foam-callout[data-callout-type="question"],
+.report-note__body .foam-callout[data-callout-type="faq"],
+.report-note__body .foam-callout[data-callout-type="help"] {
+  --callout-color: 251, 146, 60;
+}
+.report-note__body .foam-callout[data-callout-type="bug"] {
+  --callout-color: 239, 68, 68;
+}
+.report-note__body .foam-callout[data-callout-type="missing"] {
+  --callout-color: 249, 115, 22;
+}
+.report-note__body .foam-callout[data-callout-type="quote"],
+.report-note__body .foam-callout[data-callout-type="cite"] {
+  --callout-color: 148, 163, 184;
+}
+.foam-callout-title {
+  align-items: center;
+  color: var(--foam-callout-color);
+  display: flex;
+  font-family: var(--report-font-heading);
+  font-size: 1.35em;
+  font-style: normal;
+  font-weight: 700;
+  gap: 0.5em;
+  line-height: 1.35;
+  margin: 0 0 0.6em;
+}
+.foam-callout-icon {
+  background: currentColor;
+  flex: 0 0 1.1em;
+  height: 1.1em;
+  mask-image: var(--callout-icon, var(--foam-callout-default-icon));
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: var(--callout-icon, var(--foam-callout-default-icon));
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  width: 1.1em;
+}
+.foam-callout-content > :first-child { margin-top: 0; }
+.foam-callout-content > :last-child { margin-bottom: 0; }
+details.foam-callout { padding-bottom: 0.75rem; }
+details.foam-callout > .foam-callout-title {
+  cursor: pointer;
+  list-style: none;
+  margin: -0.75rem -1rem 0;
+  padding: 0.75rem 1rem;
+}
+details.foam-callout > .foam-callout-title::-webkit-details-marker { display: none; }
+.foam-callout-chevron {
+  border-bottom: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  height: 0.45em;
+  margin-left: auto;
+  transform: rotate(45deg) translateY(-0.1em);
+  transition: transform 120ms ease;
+  width: 0.45em;
+}
+details.foam-callout[open] > .foam-callout-title .foam-callout-chevron {
+  transform: rotate(225deg) translateY(-0.1em);
+}
+details.foam-callout:not([open]) > .foam-callout-content { display: none; }
 
 /* Links */
 .report-note__body a {

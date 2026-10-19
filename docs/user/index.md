@@ -43,6 +43,7 @@ Coming from Obsidian? See [[migrating-from-obsidian]].
 - [[footnotes]]
 - [[block-anchors]]
 - [[embeds]]
+- [[callouts]]
 - [[foam-queries]]
 - [[smart-folders]]
 - [[tags]]
@@ -90,6 +91,7 @@ See [[publishing]] for more details.
 [footnotes]: features/footnotes.md 'Footnotes'
 [block-anchors]: features/block-anchors.md 'Block Anchors'
 [embeds]: features/embeds.md 'Note Embeds'
+[callouts]: features/callouts.md 'Callouts'
 [foam-queries]: features/foam-queries.md 'Foam Queries'
 [smart-folders]: features/smart-folders.md 'Smart Folders'
 [tags]: features/tags.md 'Tags'
