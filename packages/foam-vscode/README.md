@@ -1,5 +1,174 @@
 <div align="center">
 <img src="assets/icon/FOAM_ICON_256.png" width="100"/>
+</div>
+
+
+
+# Foam - Unofficial Community Fork
+
+Read this README in Chinese: [Simplified Chinese](readme_cn.md).
+
+> [!info] **Unofficial fork:** This repository builds on [Foam](https://github.com/foambubble/foam)
+the open-source knowledge-management extension for VS Code. 
+It is maintained independently and is not an official Foam release.
+
+## With gratitude to the original Foam team
+
+To Jani Eväkallio, the original creator, and to every maintainer and contributor who has shaped Foam: thank you. Your thoughtful work on the code, documentation, and community created the foundation this fork is built on. This fork is an independent continuation for additional ideas; it does not diminish or replace the original project. The original project description and contributor credits are preserved below.
+
+# Unofficial Community Fork Features
+## + Callouts like in Github / Obsidian
+### Github Callouts
+> [!note]
+> notes for something.
+
+> [!tip]
+> tips for somethings.
+
+> [!important]
+> some important information.
+
+> [!warning]
+> warning for something.
+
+> [!caution]
+> be careful with this.
+
+### Others common callouts 
+> [!info]
+> These callouts only works in VSCode and may not render correctly on other platforms like GitHub.
+
+![](./assets/screenshots/feature-callout-others.png)
+
+```markdown
+> [!abstract] 
+> a brief summary or abstract of the content.
+
+
+> [!faq]
+> frequently asked questions and their answers.
+
+> [!example]
+> an example illustrating the concept or usage.
+
+> [!bug]
+> a description of a bug or issue.
+
+> [!error]
+> an error message or critical issue.
+
+> [!missing]
+> something that is missing or not found.
+
+> [!quote]
+> a quotation or cited text.
+
+> [!idea]
+> a new idea or suggestion.
+
+> [!todo]
+> a task or item to be done.
+
+> [!waitting]
+> something that is pending or waiting.
+
+> [!doing]
+> something that is currently in progress.
+
+> [!giveup]
+> something that has been abandoned or given up.
+
+> [!done]
+> something that has been completed.
+```
+
+### You can foldout the callouts by adding a `-` after the callout type
+```markdown
+> [!note]- Foldout your callout
+> line 1
+> line 2
+> line 3
+> line 4
+```
+![](./assets/screenshots/feature-callout-foldout.gif)
+
+> [!note]- Foldout your callout
+> line 1
+> line 2
+> line 3
+> line 4
+
+### Callout can embed callout
+```markdown
+> [!note]
+> This is a note.
+>
+> > [!tip]
+> > This is a tip inside a note.
+```
+![](./assets/screenshots/feature-callout-embed-callout.gif)
+
+
+
+### Config 
+#### Only use callouts that github supports
+If you worry about compatibility with GitHub, only use callouts that GitHub supports, such as `note`, `tip`, `important`, `warning`, and `caution`.
+![](./assets/screenshots/feature-callout-config-github-only.png)
+
+#### Active all callouts
+UnSelect the **GitHub only** option to activate all callouts.
+
+#### Aliases for callouts
+I has add some aliases for callouts in the configuration already , you can add more if needed.
+
+### Use commands to callout you selected text / cancel callout
+This is some info for the callout commands. 
+You can select text and use the command to wrap it in a callout or cancel an existing callout.
+![](./assets/screenshots/feature-callout-your-selection.gif)
+
+
+
+
+
+
+## + Embedding audio and video with wikilink like obisidian
+
+
+
+You do not need to write an HTML `<audio>` or `<video>` tag anymore.
+### Embedding Video
+```markdown
+![[VideoName]]
+
+= 
+
+![[VideoName.mp4]]
+
+=
+
+<video src="VideoName.mp4" controls></video>
+```
+### Embedding Audio
+```markdown
+![[AudioName]]
+
+![[AudioName.mp3]]
+
+<audio src="AudioName.mp3" controls></audio>
+```
+
+
+
+> [!warning] !!! Video and Audio Formats
+> Video formats: `.mp4`, `.webm`, `.avi`, `.mov`. Audio formats: `.mp3`, `.wav`, `.m4a`.
+
+> [VSCode don't support all video and audio formats natively. ](https://github.com/microsoft/vscode/issues/167685)
+
+> Make sure your media files are in a format that VSCode can play.
+
+---
+
+
 
 # Foam for VSCode
 

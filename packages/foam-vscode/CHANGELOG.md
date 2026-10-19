@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.46.2
+
+### Patch Changes
+
+- Add GitHub and Obsidian-style callouts, including foldable callouts, a GitHub-compatible mode, aliases, and commands to wrap or cancel callouts around selected text.
+
 ## 0.46.1
 
 ### Patch Changes
