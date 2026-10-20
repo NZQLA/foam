@@ -1,6 +1,6 @@
 /* @unit-ready */
 import MarkdownIt from 'markdown-it';
-import { FoamWorkspace } from '@foam/core';
+import { AttachmentResourceProvider, FoamWorkspace, URI } from '@foam/core';
 import { createMarkdownParser } from '@foam/core';
 import { createRenderContext } from '@foam/core';
 import {
@@ -19,6 +19,26 @@ const getEmbedNoteType = () =>
   getFoamVsCodeConfig<string>(CONFIG_EMBED_NOTE_TYPE);
 
 describe('Displaying included notes in preview', () => {
+  it('should render a resolved mp4 attachment as a video', async () => {
+    const video = await new AttachmentResourceProvider().fetch(
+      URI.file('/docs/TsetFeature/clouds.mp4')
+    );
+    const ws = new FoamWorkspace().set(video);
+    const md = markdownItWikilinkEmbed(
+      MarkdownIt({ html: true }),
+      ws,
+      parser,
+      {
+        renderContext: createRenderContext(),
+        getEmbedNoteType,
+      }
+    );
+
+    expect(md.render('![[clouds.mp4]]')).toContain(
+      '<video src="/docs/TsetFeature/clouds.mp4" controls></video>'
+    );
+  });
+
   it('should render an included note in full inline mode', async () => {
     const note = await createFile('This is the text of note A', [
       'preview',

@@ -1,5 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <filter id="plus-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" />
+    </filter>
+  </defs>
   <circle cx="128" cy="128" r="128" fill="#fff"/>
   <circle cx="128" cy="128" r="124" fill="#c0c0ff"/>
   <circle cx="110" cy="110" r="70" fill="#00f"/>
+  <path
+    d="M110 82v56M82 110h56"
+    fill="none"
+    stroke="#39f6ff"
+    stroke-linecap="round"
+    stroke-width="30"
+    opacity=".9"
+    filter="url(#plus-glow)"
+  />
+  <path
+    d="M110 82v56M82 110h56"
+    fill="none"
+    stroke="#182bff"
+    stroke-linecap="round"
+    stroke-width="24"
+  />
+  <path
+    d="M110 82v56M82 110h56"
+    fill="none"
+    stroke="#f5feff"
+    stroke-linecap="round"
+    stroke-width="15"
+  />
 </svg>

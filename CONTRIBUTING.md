@@ -39,6 +39,23 @@ You can also use the provided [Dev Containers](docs/dev/devcontainers.md) to avo
 
    `yarn build`
 
+
+### LocalTest
+Run the following commands one by one to compile, build, package, and install the extension locally:
+```powershell
+yarn workspace <ExtensionName> compile
+
+yarn workspace <ExtensionName> build
+
+yarn package-extension
+
+code --install-extension ./packages/foam-vscode/<ExtensionName>.vsix
+```
+
+
+
+
+
 You should now be ready to start working!
 
 ### Structure of the project

@@ -1,7 +1,7 @@
 {
   "name": "foam-vscode-unofficial",
   "displayName": "Foam Unofficial",
-  "description": "VS Code + Markdown + Wikilinks for your note taking and knowledge base",
+  "description": "Add some useful features to the original Foam extension. Callouts / Embedding audio and video with wikilink. Media format compatibility with VSCode.",
   "private": true,
   "repository": {
     "url": "https://github.com/NZQLA/foam/tree/Dev",

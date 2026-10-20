@@ -5,8 +5,7 @@
 
 
 # Foam - Unofficial Community Fork
-
-Read this README in Chinese: [Simplified Chinese](readme_cn.md).
+Add some useful features to the original Foam extension.
 
 > [!info] **Unofficial fork:** This repository builds on [Foam](https://github.com/foambubble/foam)
 the open-source knowledge-management extension for VS Code. 
@@ -132,11 +131,10 @@ You can select text and use the command to wrap it in a callout or cancel an exi
 
 
 ## + Embedding audio and video with wikilink like obisidian
-
-
-
 You do not need to write an HTML `<audio>` or `<video>` tag anymore.
+
 ### Embedding Video
+![](./assets/screenshots/feature-embed-video-with-wikilink.gif)
 ```markdown
 ![[VideoName]]
 
@@ -148,16 +146,6 @@ You do not need to write an HTML `<audio>` or `<video>` tag anymore.
 
 <video src="VideoName.mp4" controls></video>
 ```
-### Embedding Audio
-```markdown
-![[AudioName]]
-
-![[AudioName.mp3]]
-
-<audio src="AudioName.mp3" controls></audio>
-```
-
-
 
 > [!warning] !!! Video and Audio Formats
 > Video formats: `.mp4`, `.webm`, `.avi`, `.mov`. Audio formats: `.mp3`, `.wav`, `.m4a`.
@@ -166,6 +154,21 @@ You do not need to write an HTML `<audio>` or `<video>` tag anymore.
 
 > Make sure your media files are in a format that VSCode can play.
 
+> [!info] Maybe ffmpeg can help convert your media files to a compatible format.
+> ```powershell
+> ffmpeg -i "D:\YourVideo.mp4" -c:v copy -c:a libmp3lame -b:a 192k "D:\YourVideoExportName.mp4"
+> ```
+> ![](./assets/screenshots/feature-embed-video-error-audio-cannot-play.gif)
+
+### Embedding Audio
+![](./assets/screenshots/feature-embed-audio-with-wikilink.gif)
+```markdown
+![[AudioName]]
+
+![[AudioName.mp3]]
+
+<audio src="AudioName.mp3" controls></audio>
+```
 ---
 
 
