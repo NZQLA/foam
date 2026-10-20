@@ -34,10 +34,9 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > be careful with this.
 
 ### Others common callouts 
-> [!info]
-> These callouts only works in VSCode and may not render correctly on other platforms like GitHub.
-
-![](./assets/screenshots/feature-callout-others.png)
+> [!warning]
+> These callouts only works in VSCode and may not render correctly on other platforms like GitHub.\
+> ![](./assets/screenshots/feature-callout-others.png)
 
 ```markdown
 > [!abstract] 
