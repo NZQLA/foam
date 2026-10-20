@@ -1,6 +1,6 @@
 {
-  "name": "foam-vscode-unofficial",
-  "displayName": "Foam Unofficial",
+  "name": "foam-unofficial",
+  "displayName": "Foam Unofficial Features",
   "description": "Add some useful features to the original Foam extension. Callouts / Embedding audio and video with wikilink. Media format compatibility with VSCode.",
   "private": true,
   "repository": {
@@ -1135,12 +1135,12 @@
     "clean": "rimraf out",
     "watch": "nodemon --watch 'src/**/*.ts' --watch '../foam-core/src/**/*.ts' --watch '../foam-graph/src/**/*.ts' --exec 'yarn build' --ext ts",
     "tag-release": "node ../../scripts/tag-release.js vscode",
-    "package": "npx @vscode/vsce@3.6.0 package --yarn --out foam-vscode-unofficial.vsix",
-    "publish:vscode": "npx vsce publish --packagePath foam-vscode-unofficial.vsix",
-    "publish:openvsx": "npx ovsx publish foam-vscode-unofficial.vsix -p $OPENVSX_TOKEN",
+    "package": "npx @vscode/vsce@3.6.0 package --yarn --out foam-unofficial.vsix",
+    "publish:vscode": "npx vsce publish --packagePath foam-unofficial.vsix",
+    "publish:openvsx": "npx ovsx publish foam-unofficial.vsix -p $OPENVSX_TOKEN",
     "release": "node release.js",
     "open-in-browser": "vscode-test-web --quality=stable --browser=chromium --extensionDevelopmentPath=. ",
-    "install-extension": "code --install-extension ./foam-vscode-unofficial.vsix",
+    "install-extension": "code --install-extension ./foam-unofficial.vsix",
     "vscode:start-debugging": "yarn clean && yarn watch"
   },
   "devDependencies": {

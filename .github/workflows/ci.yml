@@ -69,7 +69,7 @@ jobs:
       - name: Test @foam/agent-loop
         run: yarn workspace @foam/agent-loop test
       - name: Test foam-vscode
-        run: xvfb-run --auto-servernum yarn workspace foam-vscode-unofficial test
+        run: xvfb-run --auto-servernum yarn workspace foam-unofficial test
 
   performance:
     name: Performance Benchmark
@@ -127,16 +127,16 @@ jobs:
       - name: Compare @foam/core
         run: yarn workspace @foam/core bench:compare
       - name: Benchmark foam-vscode
-        run: yarn workspace foam-vscode-unofficial bench
+        run: yarn workspace foam-unofficial bench
       - name: Compare foam-vscode
-        run: yarn workspace foam-vscode-unofficial bench:compare
+        run: yarn workspace foam-unofficial bench:compare
       - name: Seed baselines if missing
         # Runs even if a comparison failed, so a first run always establishes
         # both baselines; the post-job cache save then persists them.
         if: always()
         run: |
           yarn workspace @foam/core bench:seed
-          yarn workspace foam-vscode-unofficial bench:seed
+          yarn workspace foam-unofficial bench:seed
 
   docs-site-verify:
     name: Docs Site Verify
