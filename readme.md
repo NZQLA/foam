@@ -146,14 +146,15 @@ You do not need to write an HTML `<audio>` or `<video>` tag anymore.
 <video src="VideoName.mp4" controls></video>
 ```
 
-> [!warning] !!! Video and Audio Formats
-> Video formats: `.mp4`, `.webm`, `.avi`, `.mov`. Audio formats: `.mp3`, `.wav`, `.m4a`.
-
+> [!warning] 
 > [VSCode don't support all video and audio formats natively. ](https://github.com/microsoft/vscode/issues/167685)
-
+> Supported video formats: `.mp4`, `.webm`, `.avi`, `.mov`. Audio formats: `.mp3`, `.wav`, `.m4a`.
+>
+>
 > Make sure your media files are in a format that VSCode can play.
 
-> [!info] Maybe ffmpeg can help convert your media files to a compatible format.
+> [!note] 
+> Maybe ffmpeg can help convert your media files to a compatible format.
 > ```powershell
 > ffmpeg -i "D:\YourVideo.mp4" -c:v copy -c:a libmp3lame -b:a 192k "D:\YourVideoExportName.mp4"
 > ```
