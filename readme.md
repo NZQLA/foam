@@ -39,7 +39,7 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > [!info]
 > These callouts only works in VSCode and may not render correctly on other platforms like GitHub.
 
-![](./assets/screenshots/feature-callout-others.png)
+![](./packages/foam-vscode/assets/screenshots/feature-callout-others.png)
 
 ```markdown
 > [!abstract] 
@@ -91,7 +91,7 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > line 3
 > line 4
 ```
-![](./assets/screenshots/feature-callout-foldout.gif)
+![](./packages/foam-vscode/assets/screenshots/feature-callout-foldout.gif)
 
 > [!note]- Foldout your callout
 > line 1
@@ -107,14 +107,14 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > > [!tip]
 > > This is a tip inside a note.
 ```
-![](./assets/screenshots/feature-callout-embed-callout.gif)
+![](./packages/foam-vscode/assets/screenshots/feature-callout-embed-callout.gif)
 
 
 
 ### Config 
 #### Only use callouts that github supports
 If you worry about compatibility with GitHub, only use callouts that GitHub supports, such as `note`, `tip`, `important`, `warning`, and `caution`.
-![](./assets/screenshots/feature-callout-config-github-only.png)
+![](./packages/foam-vscode/assets/screenshots/feature-callout-config-github-only.png)
 
 #### Active all callouts
 UnSelect the **GitHub only** option to activate all callouts.
@@ -125,7 +125,7 @@ I has add some aliases for callouts in the configuration already , you can add m
 ### Use commands to callout you selected text / cancel callout
 This is some info for the callout commands. 
 You can select text and use the command to wrap it in a callout or cancel an existing callout.
-![](./assets/screenshots/feature-callout-your-selection.gif)
+![](./packages/foam-vscode/assets/screenshots/feature-callout-your-selection.gif)
 
 
 
@@ -136,7 +136,7 @@ You can select text and use the command to wrap it in a callout or cancel an exi
 You do not need to write an HTML `<audio>` or `<video>` tag anymore.
 
 ### Embedding Video
-![](./assets/screenshots/feature-embed-video-with-wikilink.gif)
+![](./packages/foam-vscode/assets/screenshots/feature-embed-video-with-wikilink.gif)
 ```markdown
 ![[VideoName]]
 
@@ -160,10 +160,10 @@ You do not need to write an HTML `<audio>` or `<video>` tag anymore.
 > ```powershell
 > ffmpeg -i "D:\YourVideo.mp4" -c:v copy -c:a libmp3lame -b:a 192k "D:\YourVideoExportName.mp4"
 > ```
-> ![](./assets/screenshots/feature-embed-video-error-audio-cannot-play.gif)
+> ![](./packages/foam-vscode/assets/screenshots/feature-embed-video-error-audio-cannot-play.gif)
 
 ### Embedding Audio
-![](./assets/screenshots/feature-embed-audio-with-wikilink.gif)
+![](./packages/foam-vscode/assets/screenshots/feature-embed-audio-with-wikilink.gif)
 ```markdown
 ![[AudioName]]
 
