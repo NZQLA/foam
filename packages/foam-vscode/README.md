@@ -91,11 +91,12 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 ```
 ![](./assets/screenshots/feature-callout-foldout.gif)
 
-> [!note]- Foldout your callout
-> line 1
-> line 2
-> line 3
-> line 4
+
+> [!note]
+> [Updated] Only show the collapse arrow when the callout has content below its title.
+> So you can easily see which callouts have additional content to expand.
+> ![](assets/screenshots/feature-callout-only-show-arrow-if-has-multilines.gif)
+
 
 ### Callout can embed callout
 ```markdown
@@ -116,7 +117,7 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > You can do this by opening the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and selecting `Reload Window`. \
 > Or **Restart VSCode** directly !
 
-#### Only use callouts that github supports
+#### Only use callouts that github supports(disable by default)
 If you worry about compatibility with GitHub, only use callouts that GitHub supports, such as `note`, `tip`, `important`, `warning`, and `caution`.
 ![](./assets/screenshots/feature-callout-config-github-only.png)
 
