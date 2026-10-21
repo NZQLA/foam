@@ -37,7 +37,7 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 ### Others common callouts 
 > [!warning]
 > These callouts only works in VSCode and may not render correctly on other platforms like GitHub.\
-> ![](./packages/foam-vscode/assets/screenshots/feature-callout-others.png)
+> ![](./assets/screenshots/feature-callout-others.png)
 
 ```markdown
 > [!abstract] 
@@ -89,13 +89,14 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > line 3
 > line 4
 ```
-![](./packages/foam-vscode/assets/screenshots/feature-callout-foldout.gif)
+![](./assets/screenshots/feature-callout-foldout.gif)
 
-> [!note]- Foldout your callout
-> line 1
-> line 2
-> line 3
-> line 4
+
+> [!note]
+> [Updated] Only show the collapse arrow when the callout has content below its title.
+> So you can easily see which callouts have additional content to expand.
+> ![](packages/foam-vscode/assets/screenshots/feature-callout-only-show-arrow-if-has-multilines.gif)
+
 
 ### Callout can embed callout
 ```markdown
@@ -105,7 +106,7 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > > [!tip]
 > > This is a tip inside a note.
 ```
-![](./packages/foam-vscode/assets/screenshots/feature-callout-embed-callout.gif)
+![](./assets/screenshots/feature-callout-embed-callout.gif)
 
 
 
@@ -116,9 +117,9 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 > You can do this by opening the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and selecting `Reload Window`. \
 > Or **Restart VSCode** directly !
 
-#### Only use callouts that github supports
+#### Only use callouts that github supports(disable by default)
 If you worry about compatibility with GitHub, only use callouts that GitHub supports, such as `note`, `tip`, `important`, `warning`, and `caution`.
-![](./packages/foam-vscode/assets/screenshots/feature-callout-config-github-only.png)
+![](./assets/screenshots/feature-callout-config-github-only.png)
 
 #### Active all callouts
 UnSelect the **GitHub only** option to activate all callouts.
@@ -129,7 +130,7 @@ I has add some aliases for callouts in the configuration already , you can add m
 ### Use commands to callout you selected text / cancel callout
 This is some info for the callout commands. 
 You can select text and use the command to wrap it in a callout or cancel an existing callout.
-![](./packages/foam-vscode/assets/screenshots/feature-callout-your-selection.gif)
+![](./assets/screenshots/feature-callout-your-selection.gif)
 
 
 
@@ -140,7 +141,7 @@ You can select text and use the command to wrap it in a callout or cancel an exi
 You do not need to write an HTML `<audio>` or `<video>` tag anymore.
 
 ### Embedding Video
-![](./packages/foam-vscode/assets/screenshots/feature-embed-video-with-wikilink.gif)
+![](./assets/screenshots/feature-embed-video-with-wikilink.gif)
 ```markdown
 ![[VideoName]]
 
@@ -165,10 +166,10 @@ You do not need to write an HTML `<audio>` or `<video>` tag anymore.
 > ```powershell
 > ffmpeg -i "D:\YourVideo.mp4" -c:v copy -c:a libmp3lame -b:a 192k "D:\YourVideoExportName.mp4"
 > ```
-> ![](./packages/foam-vscode/assets/screenshots/feature-embed-video-error-audio-cannot-play.gif)
+> ![](./assets/screenshots/feature-embed-video-error-audio-cannot-play.gif)
 
 ### Embedding Audio
-![](./packages/foam-vscode/assets/screenshots/feature-embed-audio-with-wikilink.gif)
+![](./assets/screenshots/feature-embed-audio-with-wikilink.gif)
 ```markdown
 ![[AudioName]]
 
