@@ -104,11 +104,11 @@ export default async function activate(
           ),
           githubOnly: getFoamVsCodeConfig<boolean>(
             CONFIG_CALLOUT_GITHUB_ONLY,
-            true
+            false
           ),
           calloutAliasesEnabled: getFoamVsCodeConfig<boolean>(
             CONFIG_CALLOUT_ALIASES_ENABLED,
-            false
+            true
           ),
           renderContext,
           // VS Code applies its math plugin to the preview's own instance only,

@@ -53,8 +53,8 @@ function addCallout(): Thenable<void> | undefined {
       DEFAULT_CALLOUT_TYPE_SETTING,
       INFO_CALLOUT_TYPE
     ),
-    getFoamVsCodeConfig<boolean>(CONFIG_CALLOUT_GITHUB_ONLY, true),
-    getFoamVsCodeConfig<boolean>(CONFIG_CALLOUT_ALIASES_ENABLED, false),
+    getFoamVsCodeConfig<boolean>(CONFIG_CALLOUT_GITHUB_ONLY, false),
+    getFoamVsCodeConfig<boolean>(CONFIG_CALLOUT_ALIASES_ENABLED, true),
     aliases
   );
   const range = getSelectedLinesRange(editor);

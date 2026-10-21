@@ -112,11 +112,11 @@ async function runExportHtmlPage(foam: Foam): Promise<void> {
         ),
         githubOnly: getFoamVsCodeConfig<boolean>(
           CONFIG_CALLOUT_GITHUB_ONLY,
-          true
+          false
         ),
         calloutAliasesEnabled: getFoamVsCodeConfig<boolean>(
           CONFIG_CALLOUT_ALIASES_ENABLED,
-          false
+          true
         ),
         readAttachment: async (uri: URI) => {
           try {
