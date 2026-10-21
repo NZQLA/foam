@@ -5,11 +5,12 @@
 
 
 # Foam - Unofficial Community Fork
-Add some useful features to the original Foam extension.
+Use Callouts / Embedding Video and Audio with Wikilinks like in Obsidian 😂.
 
-> [!info] **Unofficial fork:** This repository builds on [Foam](https://github.com/foambubble/foam)
-the open-source knowledge-management extension for VS Code. 
-It is maintained independently and is not an official Foam release.
+> [!note] 
+> **Unofficial fork:** This repository builds on [Foam](https://github.com/foambubble/foam)
+> the open-source knowledge-management extension for VS Code. 
+> It is maintained independently and is not an official Foam release.
 
 ## With gratitude to the original Foam team
 
@@ -109,6 +110,12 @@ To Jani Eväkallio, the original creator, and to every maintainer and contributo
 
 
 ### Config 
+
+> [!note]
+> Exe VSCode `Reload Window` to apply the configuration changes. \
+> You can do this by opening the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and selecting `Reload Window`. \
+> Or **Restart VSCode** directly !
+
 #### Only use callouts that github supports
 If you worry about compatibility with GitHub, only use callouts that GitHub supports, such as `note`, `tip`, `important`, `warning`, and `caution`.
 ![](./assets/screenshots/feature-callout-config-github-only.png)
