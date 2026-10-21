@@ -968,7 +968,7 @@
         },
         "foam.callout.githubOnly": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Only render the five GitHub-supported alert types (note, tip, important, warning, and caution), plus info as a Foam synonym for note. Other callout markers remain ordinary blockquotes."
         },
         "foam.callout.defaultType": {
@@ -978,7 +978,7 @@
         },
         "foam.callout.aliases.enabled": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Apply callout aliases in extended mode. Alias settings stay visible when this is off because VS Code settings cannot conditionally hide them."
         },
         "foam.callout.aliases.builtin": {

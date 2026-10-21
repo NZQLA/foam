@@ -65,6 +65,7 @@ interface Callout {
   canonicalType: string;
   title: ReturnType<markdownit['parseInline']>;
   collapsed: boolean;
+  hasBody: boolean;
 }
 
 export type CalloutAliases = Record<string, string | string[]>;
@@ -295,8 +296,6 @@ export function markdownItCallout(
       state.md.inline.parse(titleText, state.md, state.env, title);
 
       const collapsed = match[2] === '-';
-      const meta: Callout = { type, canonicalType, title, collapsed };
-      open.meta = { ...open.meta, foamCallout: meta };
 
       let depth = 0;
       let closeIndex = i;
@@ -304,7 +303,6 @@ export function markdownItCallout(
         if (tokens[j].type === 'blockquote_open') {
           depth++;
         } else if (tokens[j].type === 'blockquote_close' && --depth === 0) {
-          tokens[j].meta = { ...tokens[j].meta, foamCallout: meta };
           closeIndex = j;
           break;
         }
@@ -312,6 +310,20 @@ export function markdownItCallout(
 
       const bodyText =
         firstLineEnd === -1 ? '' : inline.content.slice(firstLineEnd + 1);
+      const hasBody =
+        !!bodyText.trim() || tokens.slice(i + 4, closeIndex).length > 0;
+      const meta: Callout = {
+        type,
+        canonicalType,
+        title,
+        collapsed,
+        hasBody,
+      };
+      open.meta = { ...open.meta, foamCallout: meta };
+      tokens[closeIndex].meta = {
+        ...tokens[closeIndex].meta,
+        foamCallout: meta,
+      };
       if (!bodyText.trim()) {
         tokens.splice(i + 1, 3);
         closeIndex -= 3;
@@ -352,11 +364,12 @@ export function markdownItCallout(
         : md.renderer.renderToken(tokens, idx, options);
     }
 
-    token.tag = callout.collapsed ? 'details' : 'aside';
+    const isCollapsible = callout.collapsed && callout.hasBody;
+    token.tag = isCollapsible ? 'details' : 'aside';
     token.attrJoin('class', 'foam-callout callout');
     token.attrSet('data-callout', callout.type);
     token.attrSet('data-callout-type', callout.canonicalType);
-    const tag = callout.collapsed ? 'summary' : 'div';
+    const tag = isCollapsible ? 'summary' : 'div';
     const title = md.renderer.renderInline(callout.title, options, env);
     return `${md.renderer.renderToken(
       tokens,
@@ -365,7 +378,7 @@ export function markdownItCallout(
     )}<${tag} class="foam-callout-title">${renderIcon(
       callout.canonicalType
     )}<span class="foam-callout-title-text">${title}</span>${
-      callout.collapsed
+      isCollapsible
         ? '<span class="foam-callout-chevron" aria-hidden="true"></span>'
         : ''
     }</${tag}>\n<div class="foam-callout-content">\n`;
@@ -379,7 +392,8 @@ export function markdownItCallout(
         : md.renderer.renderToken(tokens, idx, options);
     }
 
-    token.tag = (token.meta.foamCallout as Callout).collapsed
+    const callout = token.meta.foamCallout as Callout;
+    token.tag = callout.collapsed && callout.hasBody
       ? 'details'
       : 'aside';
     return `</div>\n${md.renderer.renderToken(tokens, idx, options)}`;

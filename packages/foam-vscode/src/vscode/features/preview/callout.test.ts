@@ -336,12 +336,29 @@ describe('callouts', () => {
 
   it('renders a collapsed callout as a native disclosure', () => {
     const html = build().render('> [!info]- Details\n> Body text\n');
+    const separatedBody = build().render(
+      '> [!info]- Details\n>\n> Body text\n'
+    );
 
     expect(html).toContain('<details class="foam-callout callout"');
     expect(html).toContain('<summary class="foam-callout-title"');
+    expect(html).toContain('class="foam-callout-chevron"');
     expect(html).not.toContain('<details open');
     expect(html).toContain('Details');
     expect(html).toContain('Body text');
+    expect(separatedBody).toContain('<details class="foam-callout callout"');
+    expect(separatedBody).toContain('Body text');
+  });
+
+  it('renders a title-only collapsed callout without disclosure interaction', () => {
+    const html = build().render('> [!info]- Details\n');
+
+    expect(html).toContain('<aside class="foam-callout callout"');
+    expect(html).toContain('<div class="foam-callout-title"');
+    expect(html).not.toContain('<details');
+    expect(html).not.toContain('<summary');
+    expect(html).not.toContain('foam-callout-chevron');
+    expect(html).toContain('Details');
   });
 
   it('uses the callout type as the title when none is provided', () => {
