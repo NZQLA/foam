@@ -1,7 +1,7 @@
 {
   "name": "foam-unofficial",
   "displayName": "Foam Unofficial Features",
-  "description": "Add some useful features to the original Foam extension. Callouts / Embedding audio and video with wikilink. Media format compatibility with VSCode.",
+  "description": "Use Callouts / Embedding Video and Audio with Wikilinks like in Obsidian 😂.",
   "private": true,
   "repository": {
     "url": "https://github.com/NZQLA/foam/tree/Dev",
